@@ -11,7 +11,6 @@ module Facebooker
         controller.helper_attr :facebook_session_parameters
       end
 
-    
       def facebook_session
         @facebook_session
       end
@@ -20,10 +19,8 @@ module Facebooker
         {:fb_sig_session_key=>params[:fb_sig_session_key]}
       end
       
-      
-      def set_facebook_session
-        
-        returning session_set = session_already_secured? ||  secure_with_facebook_params! ||secure_with_token!  do
+      def set_facebook_session        
+        returning session_set = session_already_secured? || secure_with_facebook_params! || secure_with_token! do
           if session_set
             capture_facebook_friends_if_available! 
             Session.current = facebook_session
