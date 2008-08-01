@@ -33,6 +33,8 @@ require 'facebooker/models/info_section'
 require 'facebooker/adapters/facebook_adapter'
 require 'facebooker/adapters/bebo_adapter'
 require 'facebooker/models/friend_list'
+require 'facebooker/models/datastore/object'
+require 'facebooker/models/datastore/object_type'
 
 module Facebooker
   class << self

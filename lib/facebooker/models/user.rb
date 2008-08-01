@@ -236,6 +236,18 @@ module Facebooker
       end
     end
     
+    def can_set_status?
+      session.post('facebook.users.hasAppPermission',:ext_perm=>"status_update") == "1"
+    end
+    
+    def set_preference(id, value)
+      session.post('facebook.data.setUserPreference',:pref_id=>id,:value=>value)
+    end
+    
+    def get_preference(id)
+      session.post('facebook.data.getUserPreference',:pref_id=>id)
+    end
+    
     ##
     # Convenience method to send email to the current user
     def send_email(subject, text=nil, fbml=nil)

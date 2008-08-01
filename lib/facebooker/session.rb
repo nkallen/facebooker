@@ -61,6 +61,9 @@ module Facebooker
     WWW_PATH_LOGIN            = "/login.php"
     WWW_PATH_ADD              = "/add.php"
     WWW_PATH_INSTALL          = "/install.php"
+    CALLBACK_URL              = ENV['FACEBOOKER_CALLBACK_URL']
+    APPLICATION_USER_ID       = ENV['FACEBOOKER_APPLICATION_USER_ID']
+    APPLICATION_SESSION_ID    = ENV['FACEBOOKER_APPLICATION_SESSION_ID']
     
     attr_writer :auth_token
     attr_reader :session_key
@@ -86,6 +89,18 @@ module Facebooker
     
     def self.current=(session)
       @current_session=session
+    end
+
+    def self.callback_url
+      CALLBACK_URL
+    end
+    
+    def self.application_user_id
+      APPLICATION_USER_ID
+    end
+    
+    def self.application_session_id
+      APPLICATION_SESSION_ID
     end
     
     def login_url(options={})
