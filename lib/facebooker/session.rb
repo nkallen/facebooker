@@ -29,6 +29,11 @@ module Facebooker
     class InvalidFeedPhotoLink < StandardError; end    
     class TemplateDataMissingRequiredTokens < StandardError; end
     class FeedMarkupInvalid < StandardError; end
+    class InternalError < StandardError; end
+    class QuotaExceeded < StandardError; end
+    class ObjectAlreadyExists < StandardError; end
+    class TemporaryDatabaseFailure < StandardError; end
+    class ProfileInfoOptions < StandardError; end
     class FeedTitleDataInvalid < StandardError; end
     class FeedTitleTemplateInvalid < StandardError; end
     class FeedBodyDataInvalid < StandardError; end

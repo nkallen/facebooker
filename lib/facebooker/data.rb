@@ -35,6 +35,10 @@ module Facebooker
             Cookie.from_hash(hash)
           end
       end
-    end    
+    end
+    
+    def object_type(type)
+      Facebooker::Datastore::ObjectType.new(type, @session)
+    end
   end
 end

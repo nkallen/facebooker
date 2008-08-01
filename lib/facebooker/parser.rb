@@ -150,6 +150,73 @@ module Facebooker
     end
   end  
   
+  class SetUserPreference < Parser#:nodoc:
+    def self.process(data)
+      element('data_setUserPreference_response', data).text_value
+    end
+  end  
+  
+  class GetUserPreference < Parser#:nodoc:
+    def self.process(data)
+      element('data_getUserPreference_response', data).text_value
+    end
+  end  
+
+  class GetObjectType < Parser#:nodoc:
+    def self.process(data)
+      array_of_hashes(element('data_getObjectType_response', data), 'object_property_info')
+    end
+  end  
+
+  class CreateObjectType < Parser#:nodoc:
+    def self.process(data)
+      element('data_createObjectType_response', data).text_value
+    end
+  end  
+
+  class GetObject < Parser#:nodoc:
+    def self.process(data)  
+      array_of_text_values(element('data_getObject_response', data), 'data_getObject_response_elt')
+    end
+  end  
+
+  class CreateObject < Parser#:nodoc:
+    def self.process(data)
+      element('data_createObject_response', data).text_value
+    end
+  end    
+  
+  class DeleteObject < Parser#:nodoc:
+    def self.process(data)
+      element('data_deleteObject_response', data).text_value
+    end
+  end  
+
+  class UpdateObject < Parser#:nodoc:
+    def self.process(data)
+      element('data_updateObject_response', data).text_value
+    end
+  end  
+
+  class DefineObjectProperty < Parser#:nodoc:
+    def self.process(data)
+      element('data_defineObjectProperty_response', data).text_value
+    end
+  end
+  
+  class GetHashValue < Parser#:nodoc:
+    def self.process(data)
+      element('data_getHashValue_response', data).text_value
+    end
+  end  
+
+  class SetHashValue < Parser#:nodoc:
+    def self.process(data)
+      element('data_setHashValue_response', data).text_value.to_i
+    end
+  end  
+
+  
   class GetAppProperties < Parser#:nodoc:
     def self.process(data)
       element('admin_getAppProperties_response', data).text_value
@@ -209,6 +276,12 @@ module Facebooker
     end
   end
 
+  class HasAppPermission < Parser#:nodoc:
+    def self.process(data)  
+      element('users_hasAppPermission_response', data).text_value
+    end
+  end
+
   class GetTags < Parser#nodoc:
     def self.process(data)
       array_of_hashes(element('photos_getTags_response', data), 'photo_tag')
@@ -257,6 +330,19 @@ module Facebooker
     end
   end
   
+  class ProfileInfoOptions < Parser#:nodoc:
+    def self.process(data)
+      array_of_hashes(element('profile_getInfoOptions_response', data), 'info_item')
+    end
+  end
+  
+  class ProfileInfoOptionsSet < Parser#:nodoc:
+    def self.process(data)
+      # Not sure why, but facebook is just returning a blank XML response.
+      element('profile_setInfoOptions_response', data).text_value
+    end
+  end
+    
   class ProfileFBMLSet < Parser#:nodoc:
     def self.process(data)
       element('profile_setFBML_response', data).text_value
@@ -393,7 +479,6 @@ module Facebooker
       321 => Facebooker::Session::AlbumIsFull,
       324 => Facebooker::Session::MissingOrInvalidImageFile,
       325 => Facebooker::Session::TooManyUnapprovedPhotosPending,
-      330 => Facebooker::Session::TemplateDataMissingRequiredTokens,
       340 => Facebooker::Session::TooManyUserCalls,
       341 => Facebooker::Session::TooManyUserActionCalls,
       342 => Facebooker::Session::InvalidFeedTitleLink,
@@ -416,7 +501,11 @@ module Facebooker
       604 => Facebooker::Session::FQLStatementNotIndexable,
       605 => Facebooker::Session::FQLFunctionDoesNotExist,
       606 => Facebooker::Session::FQLWrongNumberArgumentsPassedToFunction,
-      807 => Facebooker::Session::TemplateBundleInvalid
+      800 => Facebooker::Session::InternalError,
+      802 => Facebooker::Session::QuotaExceeded,
+      804 => Facebooker::Session::ObjectAlreadyExists,
+      805 => Facebooker::Session::TemporaryDatabaseFailure
+      
     }
     def self.process(data)
       response_element = element('error_response', data) rescue nil
@@ -449,11 +538,24 @@ module Facebooker
       'facebook.profile.setFBML' => ProfileFBMLSet,
       'facebook.profile.getInfo' => ProfileInfo,
       'facebook.profile.setInfo' => ProfileInfoSet,
+      'facebook.profile.getInfoOptions' => ProfileInfoOptions,
+      'facebook.profile.setInfoOptions' => ProfileInfoOptionsSet,
       'facebook.fbml.setRefHandle' => SetRefHandle,
       'facebook.fbml.refreshRefUrl' => RefreshRefURL,
       'facebook.fbml.refreshImgSrc' => RefreshImgSrc,
       'facebook.data.setCookie' => SetCookie,
       'facebook.data.getCookies' => GetCookies,
+      'facebook.data.setUserPreference' => SetUserPreference,
+      'facebook.data.getUserPreference' => GetUserPreference,
+      'facebook.data.createObjectType' => CreateObjectType,
+      'facebook.data.getObjectType' => GetObjectType,
+      'facebook.data.deleteObject' => DeleteObject,
+      'facebook.data.createObject' => CreateObject,
+      'facebook.data.updateObject' => UpdateObject,
+      'facebook.data.getObject' => GetObject,
+      'facebook.data.setHashValue' => SetHashValue,
+      'facebook.data.getHashValue' => GetHashValue,
+      'facebook.data.defineObjectProperty' => DefineObjectProperty,
       'facebook.admin.setAppProperties' => SetAppProperties,
       'facebook.admin.getAppProperties' => GetAppProperties,
       'facebook.admin.getAllocation' => GetAllocation,
@@ -469,7 +571,8 @@ module Facebooker
       'facebook.groups.get' => GroupsGet,
       'facebook.events.getMembers' => EventMembersGet,
       'facebook.groups.getMembers' => GroupGetMembers,
-      'facebook.notifications.sendEmail' => NotificationsSendEmail
+      'facebook.notifications.sendEmail' => NotificationsSendEmail,
+      'facebook.users.hasAppPermission' => HasAppPermission
     }
   end
 end
